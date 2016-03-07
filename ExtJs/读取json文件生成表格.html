@@ -1,0 +1,334 @@
+html文件
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Grid</title>
+		<link rel="stylesheet" type="text/css" href="ext-4.2.1.883/resources/css/ext-all.css" />
+		<script language="javascript" src="js/jquery-1.7.1.js"></script>
+		<!--<script type="text/javascript" src="ext-4.2.1.883/bootstrap.js"></script>-->
+		<script language="javascript" src="ext-4.2.1.883/ext-all-dev.js"></script>
+		<!--<script type="text/javascript" src="ext-4.2.1.883/src/grid/property/Grid.js"></script>-->
+	</head>
+
+	<body>
+		<div id="demo"></div>
+		<script type="text/javascript">
+			///<reference path="vswd-ext_2.0.2.js" /> 
+			/**/
+			/* 
+			 *作者：大笨 
+			 *日期：2009-10-13 
+			 *版本：1.0 
+			 *博客地址：http://yage.cnblogs.com 
+			 */
+			/*
+			Ext.BLANK_IMAGE_URL = 'ext-4.2.1.883/resources/images/default/s.gif';
+			Ext.onReady(function() {
+					//构造store 
+					var store = new Ext.data.JsonStore({
+						root: 'topics',
+						totalProperty: 'totalCount',
+						idProperty: 'threadid',
+						remoteSort: true,
+						fields: [
+							'title', 'forumtitle', 'forumid', 'author', {
+								name: 'replycount',
+								type: 'int'
+							}, {
+								name: 'lastpost',
+								mapping: 'lastpost',
+								type: 'date',
+								dateFormat: 'timestamp'
+							},
+							'lastposter', 'excerpt'
+						],
+						// 因为跨域，所以使用ScriptTagProxy，在同一个域里边用HttpProxy 
+						proxy: new Ext.data.ScriptTagProxy({
+							type: 'ajax',
+							url: 'jsonTxt1.json',
+							reader: {
+								type: 'json',
+								root: 'personInfoList',
+								totalProperty: 'total'
+							}
+						})
+					});
+					*/
+			//store.setDefaultSort("lastpost", "DESC"); //设置默认的排序列和方向 
+			/*
+		//构造带有分页工具栏的grid 
+		var grid = new Ext.grid.GridPanel({
+			renderTo: "demo",
+			width: 700,
+			height: 500,
+			title: '带分页功能的grid',
+			store: store,
+			trackMouseOver: false,
+			disableSelection: true,
+			loadMask: true,
+			// grid的列 
+			columns: [{
+				id: 'topic',
+				header: "主题",
+				dataIndex: 'title',
+				width: 420,
+				renderer: renderTopic,
+				sortable: true
+			}, {
+				header: "作者",
+				dataIndex: 'author',
+				width: 100,
+				hidden: true,
+				sortable: true
+			}, {
+				header: "回复数",
+				dataIndex: 'replycount',
+				width: 70,
+				align: 'right',
+				sortable: true
+			}, {
+				id: 'last',
+				header: "最后回复",
+				dataIndex: 'lastpost',
+				width: 150,
+				renderer: renderLast,
+				sortable: true
+			}],
+			// 定制用户界面 
+			viewConfig: {
+				forceFit: true,
+				enableRowBody: true,
+				showPreview: true,
+				getRowClass: function(record, rowIndex, p, store) {
+					if (this.showPreview) {
+						p.body = '<p>' + record.data.excerpt + '</p>';
+						return 'x-grid3-row-expanded';
+					}
+					return 'x-grid3-row-collapsed';
+				}
+			},
+			//在顶部的分页工具栏 
+			//tbar: pagingToolbar, 
+			// 在底部的分页工具栏 
+			bbar: pagingToolbar
+		});
+		// 加载数据 
+		store.load({
+			params: {
+				start: 0,
+				limit: 25
+			}
+		});
+		// 主题列的renderer函数 
+		function renderTopic(value, p, record) {
+			return String.format(
+				'<b><a href="http://extjs.com/forum/showthread.php?t={2}" href="http://extjs.com/forum/showthread.php?t={2}" target="_blank">{0}</a></b><a href="http://extjs.com/forum/forumdisplay.php?f={3}" href="http://extjs.com/forum/forumdisplay.php?f={3}" target="_blank">{1} Forum</a>',
+				value, record.data.forumtitle, record.id, record.data.forumid);
+		}
+		//最后回复列的renderer函数 
+		function renderLast(value, p, r) {
+			return String.format('{0}<br/>by {1}', value.dateFormat('M j, Y, g:i a'), r.data['lastposter']);
+		}
+	})
+	*/
+			//有效的
+			//JS文件：
+			// JavaScript Document
+			Ext.require([
+				'Ext.grid.*',
+				'Ext.data.*'
+			]);
+			Ext.onReady(function() {
+					//定义模型
+					Ext.define('MyData', {
+						extend: 'Ext.data.Model',
+						fields: [
+							//第一个字段需要指定mapping，其他字段，可以省略掉。 
+							{
+								id: 'id',
+								mapping: 'id'
+							},
+							'name',
+							'age'
+						]
+					});
+					//创建数据源 
+					var store = Ext.create('Ext.data.Store', {
+						pageSize: 10, // 分页大小
+						model: 'MyData',
+						proxy: {
+							//异步获取数据，这里的URL可以改为任何动态页面，只要返回JSON数据即可 
+							type: 'ajax',
+							url: 'jsonTxt1.json',
+							reader: {
+								type: 'json',
+								root: 'personInfoList',
+								totalProperty: 'total'
+							}
+						},
+						autoLoad: true //自动加载
+					});
+					//构造带分页功能的工具栏 
+					var pagingToolbar = new Ext.PagingToolbar({
+						pageSize: 5,
+						store: store,
+						displayInfo: true,
+						displayMsg: '第{0}-第{1}条，一共{2}条',
+						emptyMsg: "No topics to display",
+						items: [
+							'-', {
+								pressed: true,
+								enableToggle: true,
+								text: '预览',
+								cls: 'x-btn-text-icon details',
+								toggleHandler: function(btn, pressed) {
+									var view = grid.getView();
+									view.showPreview = pressed;
+									view.refresh();
+								}
+							}
+						]
+					});
+					//创建Grid 
+					var grid = Ext.create('Ext.grid.Panel', {
+						store: store,
+						columns: [{
+							text: "序号",
+							width: 120,
+							dataIndex: 'id',
+							sortable: true
+						}, {
+							text: "name",
+							flex: 1,
+							dataIndex: 'name',
+							sortable: true
+						}, {
+							text: "age",
+							width: 100,
+							dataIndex: 'age',
+							sortable: true
+						}],
+						height: 200,
+						width: 480,
+						x: 20,
+						y: 40,
+						title: 'ExtJS4 Grid示例',
+						renderTo: 'demo',
+						viewConfig: {
+							stripeRows: true,
+							forceFit: true
+						},
+						bbar: pagingToolbar
+					})
+				})
+				/*
+				var pagingToolbar = new Ext.PagingToolbar({
+					pageSize: 10,
+					store: store,
+					//displayInfo: true,
+					displayMsg: 'Displaying topics {0} - {1} of {2}',
+					emptyMsg: "没有文章",
+					items: [
+						'-', {
+							pressed: true,
+							enableToggle: true,
+							text: 'Show Preview',
+							cls: 'x-btn-text-icon details',
+							toggleHandler: function(btn, pressed) {
+								var view = grid.getView();
+								view.showPreview = pressed;
+								view.refresh();
+							}
+						}
+					]
+				});
+				*/
+				//JSON文件： { "items": [ { "UserName": "tian", "Sex": "男", "Age":18, "XueHao":001, "BanJi":'软件一班' }, { "UserName": "tian", "Sex": "男", "Age":18, "XueHao":001, "BanJi":'软件一班' }, { "UserName": "tian", "Sex": "男", "Age":18, "XueHao":001, "BanJi":'软件一班' } ] }
+				/*
+				Ext.onReady(function() {
+					var sm = new Ext.grid.CheckboxSelectionModel();
+					//列模式，好比数据库表一般，
+					var cm = new Ext.grid.ColumnModel([
+						new Ext.grid.RowNumberer(),
+						//sm,
+						{
+							header: '学号',
+							dataIndex: 'id',
+							id: 'id',
+							sortable: true,
+							renderer: function(value) {
+								if (value % 2 == 0) {
+									return "<span style='color:red'>" + value + "</span>";
+								} else {
+									return "<span style='color:green'>" + value + "</span>";
+								}
+							}
+						}, {
+							header: '姓名',
+							dataIndex: 'name'
+						}
+					]);
+					//本地测试数据集；
+					var data = [
+						['1', '彬彬1'],
+						['2', '彬彬2'],
+						['3', '彬彬3'],
+						['4', '彬彬4']
+					];
+					//store 可以将数据集转化成任何grid可用形式
+					//proxy 属性告诉我们从哪里获得数据
+					var ds = new Ext.data.Store({
+						// proxy:new Ext.data.MemoryProxy{data},
+						proxy: new Ext.data.HttpProxy({
+							url: 'gridpage.jsp'
+						}), //专门用来解析js变量
+						reader: new Ext.data.JsonReader({
+							totalProperty: 'totalProperty',
+							root: 'root'
+						}, [ //用于数组的解析
+							//在下面数据中加多一个mapping属性可以改变列显示位置
+							{
+								name: 'id'
+							}, {
+								name: 'name'
+							}
+						]),
+						sortInfo: {
+							field: 'name',
+							direction: 'ASC'
+						}
+					});
+					var grid = new Ext.grid.GridPanel({
+						el: 'mm',
+						ds: ds,
+						cm: cm,
+						width: 600,
+						bbar: new Ext.PagingToolbar({
+							pageSize: 10,
+							store: ds,
+							displayInfo: true,
+							displayMsg: '显示第{0}条到{1}条记录共{2}条',
+							emptyMsg: '没有记录'
+						}),
+						frame: true,
+						viewConfig: {
+							forceFit: true
+						},
+						sm: sm
+					});
+					grid.render();
+					ds.load({
+						params: {
+							start: 0,
+							limit: 10
+						}
+					});
+				});
+				*/
+		</script>
+	</body>
+
+</html>
